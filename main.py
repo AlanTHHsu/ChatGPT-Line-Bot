@@ -56,7 +56,25 @@ def handle_text_message(event):
     logger.info(f'{user_id}: {text}')
 
     try:
-        if text.startswith('/註冊'):
+        if text.startswith('/help'):
+            msg = TextSendMessage(text="使用模組：\nChatGPT文字模組👉 gpt-4o-mini\nChatGPT繪圖模組👉 DELL-E-3\n\n指令：\n/系統角色 + 文字\n👉 文字 可以命令機器人扮演某個角色，例如：請你扮演擅長做總結的人\n\n/清除\n👉 當前每一次都會紀錄最後兩筆歷史紀錄，這個指令能夠清除歷史訊息\n\n畫 + 文字\n👉 會調用 DALL∙E 3 Model，以文字生成圖像\n\n語音輸入\n👉 會調用 Whisper 模型，先將語音轉換成文字，再調用 ChatGPT 以文字回覆\n\n輸入 Youtube 網址\n👉 提取影片字幕並生成摘要\n\n輸入 普通網站 網址\n👉 提取內容並生成摘要\n\n其他文字輸入\n👉 調用 ChatGPT 以文字回覆")
+        
+        elif text.startswith('/alanorange'):
+            api_key = os.environ['OPENAI_API']#text[3:].strip()
+            k=api_key
+            model = OpenAIModel(api_key=api_key)
+            is_successful, _, _ = model.check_token_valid()
+            if not is_successful:
+                raise ValueError('Invalid API token')
+            model_management[user_id] = model
+            storage.save({
+                user_id: api_key
+            })
+            #msg = TextSendMessage(text='Token 有效，註冊成功')
+            msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nuser_id: {user_id}')
+            #msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\nuser_id: {user_id}')
+        
+        elif text.startswith('/註冊'):
             api_key = text[3:].strip()
             model = OpenAIModel(api_key=api_key)
             is_successful, _, _ = model.check_token_valid()
@@ -68,10 +86,10 @@ def handle_text_message(event):
             })
             msg = TextSendMessage(text='Token 有效，註冊成功')
 
-        elif text.startswith('/指令說明'):
-            msg = TextSendMessage(text="指令：\n/註冊 + API Token\n👉 API Token 請先到 https://platform.openai.com/ 註冊登入後取得\n\n/系統訊息 + Prompt\n👉 Prompt 可以命令機器人扮演某個角色，例如：請你扮演擅長做總結的人\n\n/清除\n👉 當前每一次都會紀錄最後兩筆歷史紀錄，這個指令能夠清除歷史訊息\n\n/圖像 + Prompt\n👉 會調用 DALL∙E 2 Model，以文字生成圖像\n\n語音輸入\n👉 會調用 Whisper 模型，先將語音轉換成文字，再調用 ChatGPT 以文字回覆\n\n其他文字輸入\n👉 調用 ChatGPT 以文字回覆")
+        elif text.startswith('/舊使用說明'):
+            msg = TextSendMessage(text="指令：\n/註冊 + API Token\n👉 API Token 請先到 https://platform.openai.com/ 註冊登入後取得\n\n/系統角色 + Prompt\n👉 Prompt 可以命令機器人扮演某個角色，例如：請你扮演擅長做總結的人\n\n/清除\n👉 當前每一次都會紀錄最後兩筆歷史紀錄，這個指令能夠清除歷史訊息\n\n畫 + Prompt\n👉 會調用 DALL∙E 2 Model(dall-e-3)，以文字生成圖像\n\n語音輸入\n👉 會調用 Whisper 模型，先將語音轉換成文字，再調用 ChatGPT 以文字回覆\n\n其他文字輸入\n👉 調用 ChatGPT 以文字回覆")
 
-        elif text.startswith('/系統訊息'):
+        elif text.startswith('/系統角色'):
             memory.change_system_message(user_id, text[5:].strip())
             msg = TextSendMessage(text='輸入成功')
 
@@ -79,10 +97,13 @@ def handle_text_message(event):
             memory.remove(user_id)
             msg = TextSendMessage(text='歷史訊息清除成功')
 
-        elif text.startswith('/圖像'):
-            prompt = text[3:].strip()
+        elif text.startswith('畫'):#('/圖像'):
+            prompt = text[1:].strip()
             memory.append(user_id, 'user', prompt)
-            is_successful, response, error_message = model_management[user_id].image_generations(prompt)
+            #is_successful, response, error_message = model_management[user_id].image_generations(prompt)
+            is_successful, response, error_message = model_management[user_id].image_generations(
+                prompt, model="dall-e-3"
+            )
             if not is_successful:
                 raise Exception(error_message)
             url = response['data'][0]['url']
@@ -156,7 +177,7 @@ def handle_audio_message(event):
             if not is_successful:
                 raise Exception(error_message)
             memory.append(user_id, 'user', response['text'])
-            is_successful, response, error_message = model_management[user_id].chat_completions(memory.get(user_id), 'gpt-3.5-turbo')
+            is_successful, response, error_message = model_management[user_id].chat_completions(memory.get(user_id), 'gpt-4o-mini')#gpt-3.5-turbo
             if not is_successful:
                 raise Exception(error_message)
             role, response = get_role_and_content(response)
@@ -178,7 +199,7 @@ def handle_audio_message(event):
 
 @app.route("/", methods=['GET'])
 def home():
-    return 'Hello World'
+    return 'Hello Alan!!!'
 
 
 if __name__ == "__main__":
