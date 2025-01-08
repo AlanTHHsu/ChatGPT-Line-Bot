@@ -64,7 +64,7 @@ def handle_text_message(event):
         elif text.startswith('/alanorange'):
             api_key = os.getenv('OPENAI_API')#text[3:].strip()
             k=api_key
-            msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}')
+            msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\n{user_id}')
             #model = OpenAIModel(api_key=api_key)
             #is_successful, _, _ = model.check_token_valid()
             #if not is_successful:
