@@ -29,6 +29,7 @@ handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET'))
 storage = None
 youtube = Youtube(step=4)
 website = Website()
+#openai.api_key = os.getenv('OPENAI_API')
 
 
 memory = Memory(system_message=os.getenv('SYSTEM_MESSAGE'), memory_message_count=2)
@@ -60,7 +61,7 @@ def handle_text_message(event):
             msg = TextSendMessage(text="使用模組：\nChatGPT文字模組👉 gpt-4o-mini\nChatGPT繪圖模組👉 DELL-E-3\n\n指令：\n/系統角色 + 文字\n👉 文字 可以命令機器人扮演某個角色，例如：請你扮演擅長做總結的人\n\n/清除\n👉 當前每一次都會紀錄最後兩筆歷史紀錄，這個指令能夠清除歷史訊息\n\n畫 + 文字\n👉 會調用 DALL∙E 3 Model，以文字生成圖像\n\n語音輸入\n👉 會調用 Whisper 模型，先將語音轉換成文字，再調用 ChatGPT 以文字回覆\n\n輸入 Youtube 網址\n👉 提取影片字幕並生成摘要\n\n輸入 普通網站 網址\n👉 提取內容並生成摘要\n\n其他文字輸入\n👉 調用 ChatGPT 以文字回覆")
         
         elif text.startswith('/alanorange'):
-            api_key = os.environ['OPENAI_API']#text[3:].strip()
+            api_key = os.getenv('OPENAI_API')#text[3:].strip()
             k=api_key
             model = OpenAIModel(api_key=api_key)
             is_successful, _, _ = model.check_token_valid()
