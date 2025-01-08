@@ -34,7 +34,8 @@ website = Website()
 
 memory = Memory(system_message=os.getenv('SYSTEM_MESSAGE'), memory_message_count=2)
 model_management = {}
-api_keys = {}
+api_keys = os.getenv('OPENAI_API')
+#api_keys = {}
 
 
 @app.route("/callback", methods=['POST'])
@@ -62,7 +63,7 @@ def handle_text_message(event):
         
         elif text.startswith('/alanorange'):
             api_key = os.getenv('OPENAI_API')#text[3:].strip()
-            k=api_key
+            #k=api_key
             model = OpenAIModel(api_key=api_key)
             is_successful, _, _ = model.check_token_valid()
             if not is_successful:
