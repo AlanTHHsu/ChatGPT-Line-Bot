@@ -75,13 +75,15 @@ def handle_text_message(event):
                 storage.save({
                     user_id: api_key
                     })
+                msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\nuser_id: {user_id}')
             else:
                 logger.warning("Storage is not initialized. Skipping save operation.")
+                msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\nuser_id: {user_id}')
             
             #storage.save({
             #    user_id: api_key
             #})
-            msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\nuser_id: {user_id}')
+            #msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\nuser_id: {user_id}')
         
         elif text.startswith('/註冊'):
             api_key = os.getenv('OPENAI_API')#text[3:].strip()
