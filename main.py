@@ -29,7 +29,7 @@ line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET'))
 #初始化 Storage
 storage = Storage(None)
-#storage = Storage()#None
+#storage = None
 youtube = Youtube(step=4)
 website = Website()
 memory = Memory(system_message=os.getenv('SYSTEM_MESSAGE'), memory_message_count=2)
@@ -64,17 +64,23 @@ def handle_text_message(event):
         elif text.startswith('/alanorange'):
             api_key = os.getenv('OPENAI_API')#text[3:].strip()
             k = api_key
-            #msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\nUser: {user_id}')
             model = OpenAIModel(api_key=api_key)
             is_successful, _, _ = model.check_token_valid()
             if not is_successful:
                 raise ValueError('Invalid API token')
             model_management[user_id] = model
-            storage.save({
-                user_id: api_key
-            })
-            #msg = TextSendMessage(text='Token 有效，註冊成功')
-            #msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nuser_id: {user_id}')
+            
+            # 檢查 storage 的初始化狀態
+            if storage is not None:  # 確認 storage 不是 None
+                storage.save({
+                    user_id: api_key
+                })
+            else:
+                logger.warning("Storage is not initialized. Skipping save operation.")
+            
+            #storage.save({
+            #    user_id: api_key
+            #})
             msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\nuser_id: {user_id}')
         
         elif text.startswith('/註冊'):
