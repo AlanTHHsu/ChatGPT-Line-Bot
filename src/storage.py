@@ -52,3 +52,4 @@ class Storage:
 
     def load(self):
         return self.storage.load()
+
