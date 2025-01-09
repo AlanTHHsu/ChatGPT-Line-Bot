@@ -21,6 +21,9 @@ from src.service.youtube import Youtube, YoutubeTranscriptReader
 from src.service.website import Website, WebsiteReader
 from src.mongodb import mongodb
 
+# 初始化 storage 對象
+storage = Storage()
+
 load_dotenv('.env')
 
 app = Flask(__name__)
@@ -64,18 +67,18 @@ def handle_text_message(event):
         elif text.startswith('/alanorange'):
             api_key = os.getenv('OPENAI_API')#text[3:].strip()
             k = api_key
-            msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\nUser: {user_id}')
+            #msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\nUser: {user_id}')
             model = OpenAIModel(api_key=api_key)
             is_successful, _, _ = model.check_token_valid()
             if not is_successful:
                 raise ValueError('Invalid API token')
             model_management[user_id] = model
-            #storage.save({
-            #    user_id: api_key
-            #})
+            storage.save({
+                user_id: api_key
+            })
             #msg = TextSendMessage(text='Token 有效，註冊成功')
             #msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nuser_id: {user_id}')
-            #msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\nuser_id: {user_id}')
+            msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\nuser_id: {user_id}')
         
         elif text.startswith('/註冊'):
             api_key = os.getenv('OPENAI_API')#text[3:].strip()
