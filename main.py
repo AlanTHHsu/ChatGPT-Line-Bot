@@ -22,12 +22,12 @@ from src.service.website import Website, WebsiteReader
 from src.mongodb import mongodb
 
 load_dotenv('.env')
-storage = Storage()
+#storage = Storage()
 
 app = Flask(__name__)
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET'))
-storage = None
+storage = Storage()#None
 youtube = Youtube(step=4)
 website = Website()
 #openai.api_key = os.getenv('OPENAI_API')
