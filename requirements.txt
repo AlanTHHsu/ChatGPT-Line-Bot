@@ -1,3 +1,4 @@
+pip>=20.3
 line-bot-sdk
 python-dotenv
 flask>=2.1.0
