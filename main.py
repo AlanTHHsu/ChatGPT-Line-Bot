@@ -27,7 +27,7 @@ load_dotenv('.env')
 app = Flask(__name__)
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET'))
-初始化 Storage
+#初始化 Storage
 storage = Storage(storage=None)
 #storage = Storage()#None
 youtube = Youtube(step=4)
