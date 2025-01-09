@@ -74,7 +74,7 @@ def handle_text_message(event):
             if storage is not None:  # 確認 storage 不是 None
                 storage.save({
                     user_id: api_key
-                })
+                    })
             else:
                 logger.warning("Storage is not initialized. Skipping save operation.")
             
