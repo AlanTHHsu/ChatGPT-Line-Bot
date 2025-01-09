@@ -27,7 +27,11 @@ load_dotenv('.env')
 app = Flask(__name__)
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET'))
-storage = Storage()#None
+# 創建一個字典來存放數據
+initial_storage = {}
+# 使用上述字典來初始化 Storage
+storage = Storage(storage=initial_storage)
+#storage = Storage()#None
 youtube = Youtube(step=4)
 website = Website()
 #openai.api_key = os.getenv('OPENAI_API')
@@ -35,8 +39,8 @@ website = Website()
 
 memory = Memory(system_message=os.getenv('SYSTEM_MESSAGE'), memory_message_count=2)
 model_management = {}
-api_keys = os.getenv('OPENAI_API')
-#api_keys = {}
+#api_keys = os.getenv('OPENAI_API')
+api_keys = {}
 
 
 @app.route("/callback", methods=['POST'])
