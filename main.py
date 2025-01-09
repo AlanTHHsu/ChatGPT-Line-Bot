@@ -35,6 +35,7 @@ website = Website()
 memory = Memory(system_message=os.getenv('SYSTEM_MESSAGE'), memory_message_count=2)
 model_management = {}
 #api_keys = os.getenv('OPENAI_API')
+api_key = {}
 api_keys = {}
 
 
