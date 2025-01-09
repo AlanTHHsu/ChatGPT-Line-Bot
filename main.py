@@ -21,7 +21,6 @@ from src.service.youtube import Youtube, YoutubeTranscriptReader
 from src.service.website import Website, WebsiteReader
 from src.mongodb import mongodb
 
-# 初始化 storage 對象
 storage = Storage()
 
 load_dotenv('.env')
