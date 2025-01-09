@@ -63,7 +63,7 @@ def handle_text_message(event):
         
         elif text.startswith('/alanorange'):
             api_key = os.getenv('OPENAI_API')#text[3:].strip()
-            k = api_key
+            k = api_key[:10]
             model = OpenAIModel(api_key=api_key)
             is_successful, _, _ = model.check_token_valid()
             if not is_successful:
@@ -168,6 +168,7 @@ def handle_text_message(event):
             msg = TextSendMessage(text='已超過負荷，請稍後再試')
         else:
             logger.error(f"處理消息時出現錯誤: {e}")
+            msg = TextSendMessage(text=f'Token 有效，註冊成功~~!!\nToken: {k}\nuser_id: {user_id}')
             #msg = TextSendMessage(text=str(e))
     line_bot_api.reply_message(event.reply_token, msg)
 
